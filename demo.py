@@ -8,9 +8,16 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
-video_file = 'D:\\桌面\\创作\\MAAS\\AI-2Dstyle-Transfer\\media\\beijing.mp4'
+video_file = 'D:\\桌面\\创作\\MAAS\\AI-2Dstyle-Transfer\\media\\other_2.mp4'
 audio_file = 'D:\\桌面\\创作\\MAAS\\AI-2Dstyle-Transfer\\media\\audio_tmp.mp3'
 
+physical_devices = tf.config.experimental.list_physical_devices('GPU')
+if len(physical_devices) > 0:
+    for k in range(len(physical_devices)):
+        tf.config.experimental.set_memory_growth(physical_devices[k], True)
+        print('memory growth:', tf.config.experimental.get_memory_growth(physical_devices[k]))
+    else:
+        print("Not enough GPU hardware devices available")
 
 class VideoTransBase(object):
     """
@@ -20,10 +27,11 @@ class VideoTransBase(object):
     """
 
     def __init__(self):
-        self.out_file = 'D:\\桌面\\创作\\MAAS\\AI-2Dstyle-Transfer\\output\\beijing.mp4'
-        self.out_tmp_file = 'D:\\桌面\\创作\\MAAS\\AI-2Dstyle-Transfer\\output\\video_tmp.mp4'
+        self.model = None
+        self.out_file = 'D:\\桌面\\创作\\MAAS\\AI-2Dstyle-Transfer\\output\\other_2'
+        self.chunk = 500
 
-    def __repr__(self):
+    def __enter__(self):
         print("test")
 
     def model_load(self):
@@ -41,33 +49,30 @@ class VideoTransBase(object):
         # When everything done, release the video capture object
         video.release()
         logging.info('loading video done.')
-        results = self.model(frames)
 
-        result_frames = [r['output_img'] for r in results]
-        # We need to set resolutions for writing video and  convert them from float to integer.
-        frame_height, frame_width, _ = result_frames[0].shape
-        size = (frame_width, frame_height)
+        for idx in range(0, len(frames), self.chunk):
+            results = self.model(frames[idx:idx + self.chunk])
+            logging.info('model result has has been done: ' + str(idx))
 
-        #  r, _, _, _ = lstsq(X, U)
-        for idx in range(len(result_frames)):
-            result_frames[idx] = result_frames[idx].astype(np.uint8)
-        logging.info(f'saving video to file {self.out_tmp_file}')
-        out = cv2.VideoWriter(self.out_tmp_file, cv2.VideoWriter_fourcc(*'mp4v'), fps, size, True)
+            result_frames = [r['output_img'] for r in results]
+            # We need to set resolutions for writing video and  convert them from float to integer.
+            frame_height, frame_width, _ = result_frames[0].shape
+            size = (frame_width, frame_height)
 
-        for f in result_frames:
-            out.write(f)
-            cv2.imshow('frame: ', f)
-        out.release()
-        logging.info(f'saving video done')
-        logging.info(f'merging audio and video')
+            #  r, _, _, _ = lstsq(X, U)
+            for pos in range(len(result_frames)):
+                result_frames[pos] = result_frames[pos].astype(np.uint8)
 
-        # loading video dsa gfg intro video
-        clip = VideoFileClip(self.out_tmp_file)
-        audioclip = AudioFileClip(audio_file)
+            filename = self.out_file + "_" + str(idx + 1) + ".mp4"
+            logging.info(f'saving video to file {filename}')
+            out = cv2.VideoWriter(filename, cv2.VideoWriter_fourcc(*'mp4v'), fps, size, True)
 
-        # adding audio to the video clip
-        videoclip = clip.set_audio(audioclip)
-        videoclip.write_videofile(self.out_file)
+            for f in result_frames:
+                out.write(f)
+                # cv2.imshow('frame: ', f)
+            out.release()
+            logging.info(f'saving {idx/1000}th video done')
+
         # save to gif
         logging.info('finished!')
 
