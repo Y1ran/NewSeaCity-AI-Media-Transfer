@@ -8,7 +8,7 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
-video_file = 'D:\\桌面\\创作\\MAAS\\AI-2Dstyle-Transfer\\media\\other_2.mp4'
+video_file = 'D:\\桌面\\创作\\MAAS\\AI-2Dstyle-Transfer\\media\\other_1.mp4'
 audio_file = 'D:\\桌面\\创作\\MAAS\\AI-2Dstyle-Transfer\\media\\audio_tmp.mp3'
 
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
@@ -19,6 +19,7 @@ if len(physical_devices) > 0:
     else:
         print("Not enough GPU hardware devices available")
 
+
 class VideoTransBase(object):
     """
     content:make video transfer to 2-Dims style
@@ -28,17 +29,19 @@ class VideoTransBase(object):
 
     def __init__(self):
         self.model = None
-        self.out_file = 'D:\\桌面\\创作\\MAAS\\AI-2Dstyle-Transfer\\output\\other_2'
+        self.out_file = 'D:\\桌面\\创作\\MAAS\\AI-2Dstyle-Transfer\\output\\other_1'
         self.chunk = 500
 
     def __enter__(self):
-        print("test")
+        print("test started...")
 
     def model_load(self):
         self.model = pipeline('image-portrait-stylization', model='damo/cv_unet_person-image-cartoon_compound-models')
 
-    def read_parse_video(self, video_file: str, audio_file: str) -> str:
-        self.split_audio_src(video_file, audio_file)
+    def read_parse_video(self, video_file: str, audio_file: str):
+        # if you have BGM inside source video, uncomment below code
+        # self.split_audio_src(video_file, audio_file)
+
         logging.info(f'load video {video_file}')
         video = cv2.VideoCapture(video_file)
         fps = video.get(cv2.CAP_PROP_FPS)
