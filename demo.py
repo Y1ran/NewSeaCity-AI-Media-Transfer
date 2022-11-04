@@ -1,10 +1,10 @@
 import cv2
 import numpy as np
 import tensorflow as tf
-from modelscope.hub.snapshot_download import snapshot_download
-from modelscope.pipelines import pipeline
 from moviepy.editor import VideoFileClip, AudioFileClip
 import logging
+from modelscope.pipelines import pipeline
+from modelscope.utils.constant import Tasks
 
 logging.basicConfig(level=logging.INFO)
 
