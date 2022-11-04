@@ -12,7 +12,7 @@
 
 
 ## Demo
-![demo_vid](https://github.com/menyifang/DCT-Net/raw/main/assets/demo.gif)
+![demo_vid](https://github.com/Y1ran/AI-2Dstyle-Transfer/blob/main/media/beijing.png)
 
 
 ## Requirements
