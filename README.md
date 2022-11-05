@@ -1,4 +1,4 @@
-# AI-2Dstyle-Transfer
+# NewSeaCity-AI-Media-Transfer
 基于DCT-NET风格迁移算法的视频自动化风格修改demo，源项目：https://github.com/menyifang/DCT-Net
 
 > [**DCT-Net: Domain-Calibrated Translation for Portrait Stylization**](arxiv_url_coming_soon), [Yifang Men](https://menyifang.github.io/)<sup>1</sup>, Yuan Yao<sup>1</sup>, Miaomiao Cui<sup>1</sup>, [Zhouhui Lian](https://www.icst.pku.edu.cn/zlian/)<sup>2</sup>, Xuansong Xie<sup>1</sup>,        
