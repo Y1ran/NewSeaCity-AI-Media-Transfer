@@ -49,24 +49,6 @@ p = pipeline('image-portrait-stylization', 'damo/cv_unet_person-image-cartoon_co
 python demo.py
 ```
 
-A quick use with python SDK
-
-- Downloads:
-```bash
-python download.py
-```
-
-- Inference:
-```bash
-python run_sdk.py
-```
-
-
-### From source code
-```bash
-python run.py
-```
-
 ## Multi-style
 
 Multi-style models and usages are provided here.
